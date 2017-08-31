@@ -465,20 +465,26 @@
 		111 : "NumpadDivide",
 		106 : "NumpadMultiply",
 		109 : "NumpadSubtract",
-		103 : "Numpad7",
-		104 : "Numpad8",
-		105 : "Numpad9",
+		103 : "Digit7",
+		104 : "Digit8",
+		105 : "Digit9",
 		107 : "NumpadAdd",
-		100 : "Numpad4",
-		101 : "Numpad5",
-		102 : "Numpad6",
-		97 : "Numpad1",
-		98 : "Numpad2",
-		99 : "Numpad3",
+		100 : "Digit4",
+		101 : "Digit5",
+		102 : "Digit6",
+		97 : "Digit1",
+		98 : "Digit2",
+		99 : "Digit3",
 		13 : "NumpadEnter",
-		96 : "Numpad0",
-		110 : "NumpadDecimal",
-		17 : "ControlLeft"	
+		96 : "Digit0",
+		110 : "Period",
+		17 : "ControlLeft",
+		36 : "Home",
+		33 : "PageUp",
+		35 : "End",
+		34 : "PageDown",
+		45 : "Insert",
+		46 : "Delete"
 	};
 	
 	
@@ -502,7 +508,9 @@
 	function scancode (e) {
 		var locale = Mstsc.locale();
 		locale = (['fr', 'en'].indexOf(locale) > 0 && locale) || 'en';
-		return KeyMap[e.code || UnicodeToCode[Mstsc.browser() || 'firefox'][locale][e.keyCode]];
+		// First look in the browser for any special mappings.  Fall back to given code.
+		var key = UnicodeToCode[Mstsc.browser() || 'firefox'][locale][e.keyCode] || e.code;
+		return KeyMap[key];
 	}
 	
 	Mstsc.scancode = scancode;
