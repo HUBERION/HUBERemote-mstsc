@@ -2,10 +2,6 @@
 	"name": "mstsc.js",
 	"author": "Sylvain Peyrefitte",
 	"version": "0.2.4",
-	"engines": 
-	[
-		"node = 0.10.x"
-	],
 	"description": "A Remote Desktop Protocol Client written in javascript",
 	"license": "AGPL v3.0",
 	"repository": {
@@ -14,9 +10,9 @@
 	},
 	"main": "server.js",
 	"dependencies": {
-		"express": "4.x.x",
-		"socket.io": "1.3.x",
-		"node-rdpjs": ">=0.2.0"
+		"express": "^4.16.2",
+		"socket.io": "^1.7.4",
+		"node-rdpjs": "git+https://github.com/t-system/node-rdpjs.git#7cab39dd9f37e4a180100258711d0e6eb9029585"
 	},
 	"scripts": {
 		"start": "node server.js"
