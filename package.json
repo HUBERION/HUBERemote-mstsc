@@ -11,7 +11,7 @@
 	"main": "server.js",
 	"dependencies": {
 		"express": "^4.16.2",
-		"socket.io": "^1.7.4",
+		"socket.io": "^2.0.4",
 		"node-rdpjs": "git+https://github.com/t-system/node-rdpjs.git#7cab39dd9f37e4a180100258711d0e6eb9029585"
 	},
 	"scripts": {
