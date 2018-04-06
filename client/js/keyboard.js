@@ -497,7 +497,12 @@
 		'chrome' : {
 			'fr' : UnicodeToCodeChrome_FR,
 			'en' : UnicodeToCode_EN
-		}
+		},
+		
+		'ie' : {
+			'fr' : UnicodeToCodeFirefox_FR,
+			'en' : UnicodeToCode_EN
+		}		
 	}
 	
 	/**
