@@ -60,7 +60,7 @@
 				return 'chrome';
 			}
 			
-			if (!!document.docuemntMode) {
+			if (!!document.documentMode) {
 				return 'ie';
 			}
 			
