@@ -34,7 +34,7 @@ module.exports = function (server) {
 			};
 			
 			rdpClient = rdp.createClient({ 
-				domain : infos.domain, 
+				domain : '', 
 				userName : infos.username,
 				password : infos.password,
 				enablePerf : true,
@@ -50,7 +50,7 @@ module.exports = function (server) {
 				client.emit('rdp-close');
 			}).on('error', function(err) {
 				client.emit('rdp-error', err);
-			}).connect(infos.ip, infos.port);
+			}).connect(process.env.ip, process.env.rdp_port);
 		}).on('mouse', function (x, y, button, isPressed) {
 			if (!rdpClient)  return;
 
