@@ -27,15 +27,17 @@
     
     function load (canvas) {
     	client = Mstsc.client.create(Mstsc.$(canvas));
+
+		connect();
     } 
     
-	function connect (username, password) {
+	function connect () {
 		Mstsc.$("main").style.display = 'none';
 		var canvas = Mstsc.$("myCanvas");
 		canvas.style.display = 'inline';
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
-		client.connect(username, password, function (err) {
+		client.connect(function (err) {
 			Mstsc.$("myCanvas").style.display = 'none';
 			Mstsc.$("main").style.display = 'inline';
 		});
@@ -46,15 +48,7 @@
   <body onload='load("myCanvas")'>
 
     <div id="main" class="container">
-		<form class="form-signin"  onSubmit="connect(this.elements['inputUsername'].value, this.elements['inputPassword'].value);return false;">
-			<img class='logo' src="./img/mstsc.js.svg"></img>
-			<label for="inputUsername" class="sr-only">Username</label>
-			<input type="text" id="inputUsername" class="form-control" placeholder="Username">
-			<label for="inputPassword" class="sr-only">Password</label>
-			<input type="password" id="inputPassword" class="form-control" placeholder="Password">
-			
-			<button class="btn btn-lg btn-primary btn-block" type="submit" style="background-color: #34A6FF; border-color: #34A6FF">Connect</button>
-		</form>
+		<p id="msgBox" class="alert alert-danger">An error occured</p>
     </div> <!-- /container -->
     <canvas id="myCanvas" style="display:none">
   </body>
