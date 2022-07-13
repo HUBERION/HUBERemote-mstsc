@@ -152,7 +152,9 @@
 				console.log('[mstsc.js] bitmap update bpp : ' + bitmap.bitsPerPixel);
 				self.render.update(bitmap);
 			}).on('rdp-close', function() {
-				next(null);
+				if(self.activeSession)
+					next({code: 'CONNCLOSED'});
+				
 				console.log('[mstsc.js] close');
 				self.activeSession = false;
 			}).on('rdp-error', function (err) {

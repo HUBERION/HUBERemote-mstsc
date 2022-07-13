@@ -24,6 +24,12 @@
 	<script type="text/javascript" src="./js/canvas.js"></script>
     <script language="javascript">
     var client = null;
+
+	var errCodeToMsg = {
+		ECONNREFUSED: 'The Connection was refused! \n Are you sure you provided the correct IP-Adress and Port when starting the Server?',
+		ECONNRESET: 'The Connection to the Server has been lost',
+		CONNCLOSED: 'The RDP-Session was closed by the host please refresh the page to restart the RDP-Session!'
+	}
     
     function load (canvas) {
     	client = Mstsc.client.create(Mstsc.$(canvas));
@@ -40,6 +46,11 @@
 		client.connect(function (err) {
 			Mstsc.$("myCanvas").style.display = 'none';
 			Mstsc.$("main").style.display = 'inline';
+
+			if(errCodeToMsg.hasOwnProperty(err.code))
+				Mstsc.$('msgBox').innerText = errCodeToMsg[err.code];
+			else
+				Mstsc.$('msgBox').innerText = `An error with the code ${err.code} has occured`;
 		});
 	}
 </script>
