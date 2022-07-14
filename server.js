@@ -21,14 +21,14 @@ require('dotenv').config();
 var express = require('express');
 var http = require('http');
 
-process.env.ip = process.env.ip || '127.0.0.1';
-process.env.rdp_port = process.env.rdp_port || 3389;
+process.env.IP = process.env.IP || '127.0.0.1';
+process.env.PORT = process.env.PORT || 9250
 
 var app = express();
 app.use(express.static(__dirname + '/client'))
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/client/html/index.html');
 });
-var server = http.createServer(app).listen(process.env.PORT || 9250);
+var server = http.createServer(app).listen(process.env.PORT);
 
 require('./server/mstsc')(server);

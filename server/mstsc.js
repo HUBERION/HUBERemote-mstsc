@@ -47,7 +47,7 @@ module.exports = function (server) {
 				client.emit('rdp-close');
 			}).on('error', function(err) {
 				client.emit('rdp-error', err);
-			}).connect(process.env.ip, process.env.rdp_port);
+			}).connect(process.env.IP, infos.port || 9000);
 		}).on('mouse', function (x, y, button, isPressed) {
 			if (!rdpClient)  return;
 

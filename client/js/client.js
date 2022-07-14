@@ -163,8 +163,11 @@
 				self.activeSession = false;
 			});
 			
+			const params = new URLSearchParams(window.location.search);
+
 			// emit infos event
 			this.socket.emit('infos', {
+				port : params.get('port') || 9000,
 				screen : { 
 					width : this.canvas.width, 
 					height : this.canvas.height 
