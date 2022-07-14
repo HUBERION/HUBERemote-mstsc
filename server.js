@@ -22,7 +22,7 @@ const http = require('http');
 const mstsc = require('./server/mstsc');
 
 process.env.IP = process.env.IP || '127.0.0.1';
-process.env.PORT = process.env.PORT || 9250
+process.env.PORT = process.env.PORT || 9250;
 
 const server = http.createServer().listen(process.env.PORT);
 mstsc(server);
