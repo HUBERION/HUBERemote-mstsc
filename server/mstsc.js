@@ -24,7 +24,12 @@ var rdp = require('node-rdpjs');
  * @param server {http(s).Server} http server
  */
 module.exports = function (server) {
-	var io = require('socket.io')(server);
+	const options={
+		cors:true,
+		origins:["*"],
+	   }
+
+	var io = require('socket.io')(server, options);
 	io.on('connection', function(client) {
 		var rdpClient = null;
 		client.on('infos', function (infos) {

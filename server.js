@@ -18,17 +18,11 @@
  */
 require('dotenv').config();
 
-var express = require('express');
-var http = require('http');
+const http = require('http');
+const mstsc = require('./server/mstsc');
 
 process.env.IP = process.env.IP || '127.0.0.1';
 process.env.PORT = process.env.PORT || 9250
 
-var app = express();
-app.use(express.static(__dirname + '/client'))
-app.get('/', function(req, res) {
-	res.sendFile(__dirname + '/client/html/index.html');
-});
-var server = http.createServer(app).listen(process.env.PORT);
-
-require('./server/mstsc')(server);
+const server = http.createServer().listen(process.env.PORT);
+mstsc(server);
