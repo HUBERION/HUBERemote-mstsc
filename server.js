@@ -22,7 +22,7 @@ var express = require('express');
 var http = require('http');
 
 process.env.IP = process.env.IP || '127.0.0.1';
-process.env.PORT = process.env.PORT || 9250
+process.env.PORT = process.env.PORT || 9250;
 
 var app = express();
 app.use(express.static(__dirname + '/client'))
