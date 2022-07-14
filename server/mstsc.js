@@ -17,7 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var rdp = require('node-rdpjs');
+const rdp = require('node-rdpjs');
+const socketio = require('socket.io');
 
 /**
  * Create proxy between rdp layer and socket io
@@ -29,9 +30,10 @@ module.exports = function (server) {
 		origins:["*"],
 	   }
 
-	var io = require('socket.io')(server, options);
+	const io = socketio(server, options);
+
 	io.on('connection', function(client) {
-		var rdpClient = null;
+		let rdpClient = null;
 		client.on('infos', function (infos) {
 			if (rdpClient) {
 				// clean older connection
