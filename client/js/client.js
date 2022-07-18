@@ -135,7 +135,7 @@
 		 * @param password {string} session password
 		 * @param next {function} asynchrone end callback
 		 */
-		connect : function (next) {
+		connect : function (sessionId, next) {
 			// compute socket.io path (cozy cloud integration)
 			var parts = document.location.pathname.split('/')
 		      , base = parts.slice(0, parts.length - 1).join('/') + '/'
@@ -163,11 +163,9 @@
 				self.activeSession = false;
 			});
 			
-			const params = new URLSearchParams(window.location.search);
-
 			// emit infos event
 			this.socket.emit('infos', {
-				port : params.get('port') || 9000,
+				sessionId: sessionId,
 				screen : { 
 					width : this.canvas.width, 
 					height : this.canvas.height 

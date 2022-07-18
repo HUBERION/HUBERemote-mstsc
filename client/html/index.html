@@ -28,30 +28,39 @@
 	var errCodeToMsg = {
 		ECONNREFUSED: 'The Connection was refused! \n Are you sure you provided the correct IP-Adress and Port when starting the Server?',
 		ECONNRESET: 'The Connection to the Server has been lost',
-		CONNCLOSED: 'The RDP-Session was closed by the host please refresh the page to restart the RDP-Session!'
+		CONNCLOSED: 'The RDP-Session was closed by the host please refresh the page to restart the RDP-Session!',
+		NOSESSIONID: 'Please provide a sessionId as a query-parameter!',
+		SESSIONNOTFOUND: 'The provided SessionId could not be found'
 	}
     
     function load (canvas) {
     	client = Mstsc.client.create(Mstsc.$(canvas));
 
-		connect();
+		const params = new URLSearchParams(window.location.search);
+
+		if(params.get('sessionId') == undefined)
+			displayError({code: 'NOSESSIONID'});
+		else
+			connect(params.get('sessionId'));
     } 
     
-	function connect () {
+	function connect (sessionId) {
 		Mstsc.$("main").style.display = 'none';
 		var canvas = Mstsc.$("myCanvas");
 		canvas.style.display = 'inline';
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
-		client.connect(function (err) {
-			Mstsc.$("myCanvas").style.display = 'none';
-			Mstsc.$("main").style.display = 'inline';
+		client.connect(sessionId, displayError);
+	}
 
-			if(errCodeToMsg.hasOwnProperty(err.code))
-				Mstsc.$('msgBox').innerText = errCodeToMsg[err.code];
-			else
-				Mstsc.$('msgBox').innerText = `An error with the code ${err.code} has occured`;
-		});
+	function displayError(err){
+		Mstsc.$("myCanvas").style.display = 'none';
+		Mstsc.$("main").style.display = 'inline';
+
+		if(errCodeToMsg.hasOwnProperty(err.code))
+			Mstsc.$('msgBox').innerText = errCodeToMsg[err.code];
+		else
+			Mstsc.$('msgBox').innerText = `An error with the code ${err.code} has occured`;
 	}
 </script>
   </head>

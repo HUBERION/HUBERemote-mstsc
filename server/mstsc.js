@@ -17,7 +17,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var rdp = require('node-rdpjs');
+//import { request, GraphQLClient } from 'graphql-request'
+const { GraphQLClient, gql } = require('graphql-request');
+const rdp = require('node-rdpjs');
 
 /**
  * Create proxy between rdp layer and socket io
@@ -27,27 +29,40 @@ module.exports = function (server) {
 	var io = require('socket.io')(server);
 	io.on('connection', function(client) {
 		var rdpClient = null;
-		client.on('infos', function (infos) {
+		client.on('infos', async function (infos) {
 			if (rdpClient) {
 				// clean older connection
 				rdpClient.close();
 			};
 			
-			rdpClient = rdp.createClient({ 
-				enablePerf : true,
-				autoLogin : true,
-				screen : infos.screen,
-				locale : infos.locale,
-				logLevel : process.argv[2] || 'INFO'
-			}).on('connect', function () {
-				client.emit('rdp-connect');
-			}).on('bitmap', function(bitmap) {
-				client.emit('rdp-bitmap', bitmap);
-			}).on('close', function() {
-				client.emit('rdp-close');
-			}).on('error', function(err) {
-				client.emit('rdp-error', err);
-			}).connect(process.env.IP, infos.port || 9000);
+			try{
+				const connParams = await getConnParamsFromApi(infos.sessionId);
+
+				if(connParams){
+
+					rdpClient = rdp.createClient({
+						enablePerf : true,
+						autoLogin : true,
+						screen : infos.screen,
+						locale : infos.locale,
+						logLevel : process.argv[2] || 'INFO'
+					}).on('connect', function () {
+						client.emit('rdp-connect');
+					}).on('bitmap', function(bitmap) {
+						client.emit('rdp-bitmap', bitmap);
+					}).on('close', function() {
+						client.emit('rdp-close');
+					}).on('error', function(err) {
+						client.emit('rdp-error', err);
+					}).connect(connParams.currentHUB, connParams.supporterPort);
+				}
+				else{
+					client.emit('rdp-error', {code: 'SESSIONNOTFOUND'});
+				}
+			}
+			catch(err){
+				console.log(err);
+			}
 		}).on('mouse', function (x, y, button, isPressed) {
 			if (!rdpClient)  return;
 
@@ -71,4 +86,34 @@ module.exports = function (server) {
 			rdpClient.close();
 		});
 	});
+}
+
+async function getConnParamsFromApi(sessionId){
+	try{
+		const graphClient = new GraphQLClient(process.env.GRAPHQL_ENDPOINT, 
+			{ 
+				headers: () => ({ 'Authorization': `bearer ${process.env.GRAPHQL_API_TOKEN}`})
+			}
+		);
+
+		const query = gql`
+			query {
+				sessions(filters:{sessionId:{eq: "${sessionId}"}}){
+				data{
+					attributes{
+						supporterPort
+						currentHUB
+					}
+				}
+				}
+			}
+		  `
+
+		const result = await graphClient.request(query)
+
+		return result.sessions.data[0]?.attributes;
+	}
+	catch(err){
+		console.log(err);
+	}
 }
