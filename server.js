@@ -29,6 +29,9 @@ app.use(express.static(__dirname + '/client'))
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/client/html/index.html');
 });
+app.get('/:id', function(req, res) {
+	res.redirect(`/?sessionId=${req.params.id}`);
+});
 var server = http.createServer(app).listen(process.env.PORT);
 
 require('./server/mstsc')(server);
