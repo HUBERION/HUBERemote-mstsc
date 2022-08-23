@@ -135,7 +135,7 @@
 		 * @param password {string} session password
 		 * @param next {function} asynchrone end callback
 		 */
-		connect : function (sessionId, next) {
+		connect : function (sessionId, domain, username, password, next) {
 			// compute socket.io path (cozy cloud integration)
 			var parts = document.location.pathname.split('/')
 		      , base = parts.slice(0, parts.length - 1).join('/') + '/'
@@ -166,6 +166,9 @@
 			// emit infos event
 			this.socket.emit('infos', {
 				sessionId: sessionId,
+				domain: domain,
+				username: username,
+				password: password,
 				screen : { 
 					width : this.canvas.width, 
 					height : this.canvas.height 

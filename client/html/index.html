@@ -38,24 +38,27 @@
 
 		const params = new URLSearchParams(window.location.search);
 
-		if(params.get('sessionId') == undefined)
+		if(params.get('sessionId') == undefined){
 			displayError({code: 'NOSESSIONID'});
-		else
-			connect(params.get('sessionId'));
+			Mstsc.$("login").style.display = 'none';
+		}
     } 
     
-	function connect (sessionId) {
-		Mstsc.$("main").style.display = 'none';
+	function connect (domain, username, password) {
+		Mstsc.$("login").style.display = 'none';
 		var canvas = Mstsc.$("myCanvas");
 		canvas.style.display = 'inline';
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
-		client.connect(sessionId, displayError);
+
+		const params = new URLSearchParams(window.location.search);
+
+		client.connect(params.get('sessionId'), domain, username, password, displayError);
 	}
 
 	function displayError(err){
 		Mstsc.$("myCanvas").style.display = 'none';
-		Mstsc.$("main").style.display = 'inline';
+		Mstsc.$("error").style.display = 'inline';
 
 		if(errCodeToMsg.hasOwnProperty(err.code))
 			Mstsc.$('msgBox').innerText = errCodeToMsg[err.code];
@@ -67,8 +70,19 @@
 
   <body onload='load("myCanvas")'>
 
-    <div id="main" class="container">
-		<p id="msgBox" class="alert alert-danger">An error occured</p>
+	<form id="login" class="form-signin"  onSubmit="connect(this.elements['inputDomain'].value, this.elements['inputUsername'].value, this.elements['inputPassword'].value); return false;">
+		<label for="inputDomain" class="sr-only">Domain</label>
+		<input type="text" id="inputDomain" class="form-control" placeholder="Domain">
+		<label for="inputUsername" class="sr-only">Username</label>
+		<input type="text" id="inputUsername" class="form-control" placeholder="Username">
+		<label for="inputPassword" class="sr-only">Password</label>
+		<input type="password" id="inputPassword" class="form-control" placeholder="Password">
+		
+		<button class="btn btn-lg btn-primary btn-block" type="submit" style="background-color: #34A6FF; border-color: #34A6FF">Connect</button>
+	</form>
+
+    <div id="error" class="container" style="display:none">
+		<p id="msgBox" class="alert alert-danger" >An error occured</p>
     </div> <!-- /container -->
     <canvas id="myCanvas" style="display:none">
   </body>
