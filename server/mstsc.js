@@ -19,7 +19,7 @@
 
 //import { request, GraphQLClient } from 'graphql-request'
 const { GraphQLClient, gql } = require('graphql-request');
-const rdp = require('node-rdpjs');
+const rdp = require('../rdp/index');
 
 /**
  * Create proxy between rdp layer and socket io
@@ -93,9 +93,9 @@ module.exports = function (server) {
 
 async function getConnParamsFromApi(sessionId){
 	try{
-		const graphClient = new GraphQLClient(process.env.GRAPHQL_ENDPOINT, 
+		const graphClient = new GraphQLClient(process.env.API_HOST, 
 			{ 
-				headers: () => ({ 'Authorization': `bearer ${process.env.GRAPHQL_API_TOKEN}`})
+				headers: () => ({ 'Authorization': `bearer ${process.env.API_TOKEN}`})
 			}
 		);
 
@@ -113,6 +113,7 @@ async function getConnParamsFromApi(sessionId){
 		  `
 
 		const result = await graphClient.request(query)
+		console.log(result.sessions.data[0]?.attributes);
 
 		return result.sessions.data[0]?.attributes;
 	}
